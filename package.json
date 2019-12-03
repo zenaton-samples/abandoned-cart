@@ -1,0 +1,11 @@
+{
+  "name": "AbandonedCart",
+  "version": "1.0.0",
+  "main": "run.js",
+  "author": "antoine <antoine@zenaton.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "zenaton": "^0.7.1"
+  }
+}
