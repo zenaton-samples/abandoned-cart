@@ -66,7 +66,7 @@ module.exports = {
 
     slack.post("chat.postMessage", {
       body: {
-        text: `A user has an issue with card ${cart.cart_id}`,
+        text: `A user has an issue with cart ${cart.cart_id}`,
         as_user: false,
         channel: slackChannelId
       }
