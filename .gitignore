@@ -1,4 +1,5 @@
 .env
-/node_modules
-zenaton.err
+/node_modules/
 zenaton.out
+zenaton.err
+yarn-error.log

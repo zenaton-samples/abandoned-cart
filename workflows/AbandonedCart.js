@@ -1,113 +1,66 @@
-const slackChannelId = "random";
-const slackConnectorId = "";
-const sendgridConnectorId = "";
-const emailFrom = "zenaton-tutorial@zenaton.com";
-const duration1 = 5;
-const duration2 = 10;
-const duration3 = 20;
-// const duration1 = 20 * 60;       // 20 minutes
-// const duration2 = 24 * 3600;     // 1 day
-// const duration2 = 3 * 24 * 3600; // 3 days
+const { duration, task } = require("zenaton");
+
+const duration1 = duration.minutes(20);
+const duration2 = duration.days(1);
+const duration3 = duration.days(3);
 
 module.exports = {
+  // the 'handle' generator function is the main function for the workflow execution and describes what needs to be done
+  // in this workflow.
   *handle(cart) {
-    // holds the last version of the cart
+    // we store the cart as a property of the workflow. this will be useful to make the 'onEvent' function update the cart
+    // and have changes reflected in the 'handle' function.
     this.cart = cart;
 
-    // waits for the 'checkout' event, up to duration1 seconds
+    // first, we wait for the 'checkout' event, up to 'duration1' seconds.
     let event = yield this.wait.event("checkout").for(duration1);
 
-    // if 'checkout' event was received, then exit
+    // if the 'checkout' event was received it means the customer completed their order, we can stop the workflow.
     if (event !== null) return;
 
     /*
       Escalation phase 1 : in-app notification
     */
 
-    // Send an in-app notification
-    yield* this.sendNotification(this.cart);
+    // if the 'checkout' event was not received at this point, we send a notification in the company Slack so someone
+    // from the support team can take a look to check if everything is fine, and even try to contact the customer.
+    yield this.run.task("SendNotification", this.cart);
 
-    // waits again for the 'checkout' event, up to duration2 seconds
+    // we wait again for the 'checkout' event, up to 'duration2' seconds.
     event = yield this.wait.event("checkout").for(duration2);
 
-    // if 'checkout' event was received, then exit
+    // if the 'checkout' event was received it means the customer completed their order, we can stop the workflow.
     if (event !== null) return;
 
     /*
       Escalation phase 2 : e-mail reminder
     */
 
-    // send email reminder
-    yield* this.sendReminder(this.cart);
+    // if the 'checkout' event is still not received, we will try to send an email reminder to them so they can
+    // complete their order before the cart expires.
+    yield this.run.task("SendReminder", this.cart);
 
-    // waits again for the 'checkout' event to occur, for up to duration3 seconds
+    // we wait again for the 'checkout' event to occur, for up to 'duration3' seconds.
     event = yield this.wait.event("checkout").for(duration3);
 
-    // if 'checkout' event was received, then exit
+    // if the 'checkout' event was received it means the customer completed their order, we can stop the workflow.
     if (event !== null) return;
 
     /*
       Escalation phase 3 : discount code by email
     */
 
-    // Send a discount code by mail
-    yield* this.sendDiscount(this.cart);
+    // the order has not been completed yet. we send a discount code by email to add some incentive.
+    yield this.run.task("SendDiscount", this.cart);
 
-    // Exiting
+    // end of the workflow.
   },
+  // the 'onEvent' function is executed everytime the workflow is receiving an event.
   *onEvent(name, data) {
+    // when the event name is 'updateCart', we update the cart stored as a workflow property.
+    // this allows you to change the workflow depending on the content of the cart if you want to.
     if (name === "updateCart") {
       this.cart = { ...this.cart, items: data.items };
     }
-  },
-  *sendNotification(cart) {
-    /*
-    const slack = this.connector("slack", slackConnectorId);
-
-    slack.post("chat.postMessage", {
-      body: {
-        text: `A user has an issue with cart ${cart.cart_id}`,
-        as_user: false,
-        channel: slackChannelId
-      }
-    });
-    */
-  },
-  *sendReminder(cart) {
-    /*
-    const sendgrid = this.connector("sendgrid", sendgridConnectorId);
-
-    const payload = {
-      body: {
-        personalizations: [{ to: [{ email: cart.email }] }],
-        content: [{
-            type: "text/plain",
-            value: "Hey, we've noticed you did not complete your purchase\n"
-        }],
-        subject: "You have a cart still open!",
-        from: { email: emailFrom }
-      }
-    };
-
-    sendgrid.post("/mail/send", payload);
-    */
-  },
-  *sendDiscount(cart) {
-    /*
-    const sendgrid = this.connector("sendgrid", sendgridConnectorId);
-    const payload = {
-      body: {
-        personalizations: [{ to: [{ email: cart.email }] }],
-        content: [{
-            type: "text/plain",
-            value: "Hey, we've noticed you did not complete your purchase\n"
-        }],
-        subject: "Discount on your cart!",
-        from: { email: emailFrom }
-      }
-    };
-
-    sendgrid.post("/mail/send", payload);
-    */
   }
 };

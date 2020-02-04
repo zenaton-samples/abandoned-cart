@@ -1,7 +1,10 @@
 // load dependencies
-const { workflow } = require('zenaton');
+const { task, workflow } = require('zenaton');
 
-// load definitions
-const workflowDefinition = require("./workflows/AbandonedCart");
+// define tasks
+task("SendNotification", require("./tasks/SendNotification"));
+task("SendReminder", require("./tasks/SendReminder"));
+task("SendDiscount", require("./tasks/SendDiscount"));
 
-workflow("AbandonedCart", workflowDefinition);
+// define workflows
+workflow("AbandonedCart", require("./workflows/AbandonedCart"));
