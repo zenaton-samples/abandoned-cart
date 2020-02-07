@@ -1,11 +1,14 @@
 {
-  "name": "AbandonedCart",
+  "name": "abandoned-cart",
   "version": "1.0.0",
-  "main": "run.js",
-  "author": "antoine <antoine@zenaton.com>",
+  "main": "boot.js",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "zenaton": "^0.7.1"
+    "@sendgrid/mail": "^6.5.1",
+    "@slack/webhook": "^5.0.2",
+    "zenaton": "^0.8.0"
+  },
+  "scripts": {
+    "postinstall": "cp -n .env.sample $INIT_CWD/.env || :"
   }
 }
