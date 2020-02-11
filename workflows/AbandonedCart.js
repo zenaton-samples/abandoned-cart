@@ -34,7 +34,7 @@ module.exports = {
     }
     // when the event name is 'checkout', we immediately terminate the workflow.
     if (name === "checkout") {
-      // note: we could add notifications or some other tasks terminating
+      // note: we could add notifications or some other tasks before terminating
       this.terminate();
     }
   }
