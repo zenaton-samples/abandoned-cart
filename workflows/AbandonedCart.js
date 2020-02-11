@@ -1,7 +1,7 @@
 const { duration } = require("zenaton");
 
 const duration_before_email = duration.minutes(20);
-const duration_before_discount = duration.days(1);
+const duration_before_discount = duration.days(3);
 
 module.exports = {
   // the 'handle' generator function is the main function for the workflow execution and describes what needs to be done
