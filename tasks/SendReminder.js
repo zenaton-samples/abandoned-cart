@@ -1,6 +1,8 @@
 const sendgrid = require('@sendgrid/mail');
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
+const emailFrom = "zenaton-tutorial@zenaton.com";
+
 module.exports.handle = async function (cart) {
   await sendgrid.send({
     personalizations: [{ to: [{ email: cart.email }] }],
@@ -9,6 +11,6 @@ module.exports.handle = async function (cart) {
       value: "Hey, we've noticed you did not complete your purchase\n"
     }],
     subject: "You have a cart still open!",
-    from: { email: "zenaton-tutorial@zenaton.com" }
+    from: { email: emailFrom }
   });
 };

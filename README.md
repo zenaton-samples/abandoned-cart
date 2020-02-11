@@ -88,15 +88,16 @@ see it, please check again that you have selected the right application and envi
 Tasks and workflows can be dispatched by name from everywhere using the [Zenaton API](https://docs.zenaton.com/client/graphql-api/)
 or our [Node.js SDK](https://github.com/zenaton/zenaton-node).
 
-You can use also the UI of our [example app](https://github.com/zenaton/nodejs-example-app). After installation, you can (optionaly) add
+You can use also the UI of our [example app](https://github.com/zenaton/nodejs-example-app). After installation, you can (optionally) add
 your workflows and some examples of input and event in the `public/config.json` file. eg.
 
 ```json
 {
   "workflows": [
     {
-      "name": "HelloWorld",
-      "input": [ "Me" ],
+      "name": "AbandonedCart",
+      "input": [ {"items": [], "email": "john.doh@gmail.com"}],
+      "event": { "name": "checkout" }
     }
   ]
 }
