@@ -1,6 +1,6 @@
 # Zenaton Samples - Abandoned Cart
 
-This is an example of Zenaton project showcasing how you could react to a customer not finalizing their order on an ecommerce website.
+The workflow launches when a shopper adds their first item to their cart and then, if they do not check out within the wait time, sends a series of communications to re-engage the shopper. The notifications include an in-app notification, an email reminder, and an email with a discount code. The shopper's user profile is updated each time a notification is sent.
 
 ## Development
 
